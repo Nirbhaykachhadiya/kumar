@@ -20,7 +20,7 @@ const LoginSignup = () => {
             }`}
             onClick={() => setSignUp(false)}
           >
-            Login
+            LogIn
           </button>
           <button
             className={`text-xl font-semibold px-4 py-3 w-1/2 rounded-l shadow-lg ${

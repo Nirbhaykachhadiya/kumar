@@ -33,7 +33,6 @@ const SignUp = () => {
   };
 
   const onSubmit = (data) => {
-
     signUpBackend(data.userName, data.password, data.role);
     reset();
   };
@@ -130,9 +129,13 @@ const SignUp = () => {
         )}
         <div className="flex justify-center mt-10 ">
           <div>
-            <button className="bg-black rounded-md shadow-lg text-white text-xl font-semibold px-10 py-2">
-              SignUp
-            </button>
+            {loading ? (
+              <Loading />
+            ) : (
+              <button className="bg-black rounded-md shadow-lg text-white text-xl font-semibold px-10 py-2">
+                SignUp
+              </button>
+            )}
           </div>
         </div>
         <div

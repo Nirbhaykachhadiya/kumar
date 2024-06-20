@@ -63,10 +63,26 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   res.cookie("token", token, {
+    httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+    secure: true, // Ensures the cookie is sent over HTTPS only in production
+    sameSite: "strict", // Prevents CSRF attacks
+  });
+
+  res.status(200).send(new ApiResponse(200, user));
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+  if (!userId) {
+    throw new ApiError(
+      400,
+      "error accur fetch userId from req.userId from Middleware in logout function"
+    );
+  }
+  res.clearCookie("token", {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
   });
-
-  res.status(200).send(new ApiResponse(200, user));
+  res.status(200).send(new ApiResponse(200, "Logout Succefully"));
 });

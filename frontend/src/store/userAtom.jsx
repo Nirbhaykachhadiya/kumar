@@ -19,3 +19,13 @@ export const RoleAtom = atom({
   key: "RoleAtom",
   default: "",
 });
+
+export const UserNameAtom = atom({
+  key: "UserNameAtom",
+  default: "",
+});
+
+export const LoadingAtom = atom({
+  key: "LoadingAtom",
+  default: false,
+});

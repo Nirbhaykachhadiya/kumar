@@ -1,10 +1,23 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import { SignUpAtom } from "../store/userAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  InsideLoginAtom,
+  LoadingAtom,
+  RoleAtom,
+  SignUpAtom,
+  UserNameAtom,
+} from "../store/userAtom";
 import axios from "axios";
+import Loading from "../assets/Loading";
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
+  const navigate = useNavigate();
+  const setUserName = useSetRecoilState(UserNameAtom);
+  const setInsideLogin = useSetRecoilState(InsideLoginAtom);
+  const setRole = useSetRecoilState(RoleAtom);
+  const [loading, setLoading] = useRecoilState(LoadingAtom);
   const {
     register,
     handleSubmit,
@@ -17,11 +30,20 @@ const LogIn = () => {
 
   const logInBackend = async (userName, password) => {
     try {
-      const res = await axios.post("http://localhost:3001/api/v1/users/login", {
-        userName,
-        password,
-      });
+      const res = await axios.post(
+        "http://localhost:3001/api/v1/users/login",
+        {
+          userName,
+          password,
+        },
+        { withCredentials: true }
+      );
+      setLoading(false);
+      setInsideLogin(true);
+      navigate("/inside");
 
+      setUserName(res.data.data.userName);
+      setRole(res.data.data.role);
       console.log("logIn successful", res);
     } catch (error) {
       console.log("error accur in logIn", error.message);
@@ -29,6 +51,7 @@ const LogIn = () => {
   };
 
   const onSubmit = (data) => {
+    setLoading(true);
     logInBackend(data.userName, data.password);
     reset();
   };
@@ -70,9 +93,13 @@ const LogIn = () => {
 
         <div className="flex justify-center mt-10 ">
           <div>
-            <button className="bg-black rounded-md shadow-lg text-white text-xl font-semibold px-10 py-2">
-              LogIn
-            </button>
+            {loading ? (
+              <Loading />
+            ) : (
+              <button className="bg-black rounded-md shadow-lg text-white text-xl font-semibold px-10 py-2">
+                LogIn
+              </button>
+            )}
           </div>
         </div>
         <div
