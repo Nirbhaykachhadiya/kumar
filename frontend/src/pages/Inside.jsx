@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { RoleAtom, UserNameAtom } from "../store/userAtom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AddQuestion from "../components/AddQuestion";
+import QueListPaperSeter from "../components/QueListPaperSeter";
 
 const Inside = () => {
   const role = useRecoilValue(RoleAtom);
   const userName = useRecoilValue(UserNameAtom);
   const navigate = useNavigate();
+  const [addQuestion, setAddQuestion] = useState(true);
 
   const logOut = async () => {
     try {
@@ -35,7 +38,31 @@ const Inside = () => {
           LogOut
         </button>
       </div>
-      <div>{role === "paperSeter" ? <>paperSeter</> : <>teacher</>}</div>;
+      <div>
+        {role === "paperSeter" ? (
+          <>
+            <div className="h-[70px] bg-yellow-400 flex items-center justify-center">
+              <button
+                onClick={() => setAddQuestion(true)}
+                className="bg-white  text-xl font-semibold  w-[250px] py-2 shadow-lg"
+              >
+                Add Question
+              </button>
+              <button
+                onClick={() => setAddQuestion(false)}
+                className="ml-10 bg-white text-xl font-semibold  w-[250px] py-2 shadow-lg"
+              >
+                Your Listing
+              </button>
+            </div>
+            <div className="flex justify-center items-center h-[400px] sm:h-[550px]">
+              {addQuestion ? <AddQuestion /> : <QueListPaperSeter />}
+            </div>
+          </>
+        ) : (
+          <>teacher</>
+        )}
+      </div>
     </>
   );
 };

@@ -19,4 +19,30 @@ model User {
   userName String @unique
   password String
   role String
+  listedQues Que[] @relation("listed")
+  PurchasedQues Order[] @relation("purchased")
 }
+
+model Que {
+  id Int @id @default(autoincrement())
+  chepter String
+  question String
+  option1 String
+  option2 String
+  option3 String
+  option4 String
+  answer String
+  queSeterId Int
+  order Order[] @relation("order")
+  queSeter User @relation("listed",fields: [queSeterId],references: [id])
+  
+  }
+
+
+  model Order{
+    id Int @id @default(autoincrement())
+    queId Int
+    buyerId Int
+    buyer User @relation("purchased",fields: [buyerId],references: [id])
+    question Que @relation("order",fields: [queId],references: [id])
+  }
