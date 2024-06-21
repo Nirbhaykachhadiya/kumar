@@ -9,6 +9,8 @@ const QueListPaperSeter = () => {
   const [filterQues, setFilterQues] = useState([]);
   const [reCheck, setReCheck] = useState(false);
   const [num, setNum] = useState(0);
+  const [numberArr, setNumberArr] = useState([]);
+
   const fetch = async () => {
     try {
       const res = await axios.post(
@@ -17,10 +19,15 @@ const QueListPaperSeter = () => {
         { withCredentials: true }
       );
       setQues(res.data.data);
+
       setNum(1);
       setLoading(false);
 
-      console.log("fetchPaperSeterQue from backend successfully", res);
+      console.log(
+        "fetchPaperSeterQue from backend successfully",
+        res,
+        numberArr
+      );
     } catch (error) {
       console.log(
         "fetchPaperSeterQue from backend Unsuccessfully",
@@ -37,8 +44,14 @@ const QueListPaperSeter = () => {
       const filterData = ques.filter(
         (item, index) => index < num * 5 && index >= (num - 1) * 5
       );
-      console.log(filterData);
+
       setFilterQues(filterData);
+      const numberAr = Array.from(
+        { length: Math.ceil(ques.length / 5) },
+        (_, index) => index + 1
+      );
+
+      setNumberArr(numberAr);
     };
     if (num != 0) {
       stage();
@@ -71,39 +84,19 @@ const QueListPaperSeter = () => {
                 );
               })}
               <div className="flex justify-center mt-5 mb-5">
-                <div>
-                  <button
-                    onClick={() => setNum(1)}
-                    autoFocus
-                    className="border  focus:bg-yellow-300 font-semibold px-4 bg-white shadow-lg py-1"
-                  >
-                    1
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={() => setNum(2)}
-                    className="border focus:bg-yellow-300  font-semibold px-4 bg-white shadow-lg py-1"
-                  >
-                    2
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={() => setNum(3)}
-                    className="border  focus:bg-yellow-300 font-semibold px-4 bg-white shadow-lg py-1"
-                  >
-                    3
-                  </button>
-                </div>
-                <div>
-                  <button
-                    onClick={() => setNum(4)}
-                    className="border focus:bg-yellow-300  px-4 bg-white shadow-lg py-1 font-semibold"
-                  >
-                    4
-                  </button>
-                </div>
+                {numberArr.map((number, index) => (
+                  <div key={number}>
+                    <button
+                      onClick={() => setNum(number)}
+                      autoFocus={index === 0}
+                      className={`border ${
+                        number === num ? "focus:bg-yellow-300" : ""
+                      } font-semibold px-4 bg-white shadow-lg py-1`}
+                    >
+                      {number}
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
