@@ -39,6 +39,7 @@ const LogIn = () => {
         { withCredentials: true }
       );
       setLoading(false);
+      reset();
       setInsideLogin(true);
       navigate("/inside");
 
@@ -53,7 +54,6 @@ const LogIn = () => {
   const onSubmit = (data) => {
     setLoading(true);
     logInBackend(data.userName, data.password);
-    reset();
   };
   return (
     <>

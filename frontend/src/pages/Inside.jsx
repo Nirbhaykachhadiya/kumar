@@ -40,8 +40,8 @@ const Inside = () => {
       </div>
       <div>
         {role === "paperSeter" ? (
-          <>
-            <div className="h-[70px] bg-yellow-400 flex items-center justify-center">
+          <div className="bg-gray-100 ">
+            <div className="h-[70px] bg-gray-100 flex items-center justify-center">
               <button
                 onClick={() => setAddQuestion(true)}
                 className="bg-white  text-xl font-semibold  w-[250px] py-2 shadow-lg"
@@ -55,10 +55,14 @@ const Inside = () => {
                 Your Listing
               </button>
             </div>
-            <div className="flex justify-center items-center h-[400px] sm:h-[550px]">
-              {addQuestion ? <AddQuestion /> : <QueListPaperSeter />}
+            <div className="">
+              {addQuestion ? (
+                <AddQuestion setAddQuestion={setAddQuestion} />
+              ) : (
+                <QueListPaperSeter setAddQuestion={setAddQuestion} />
+              )}
             </div>
-          </>
+          </div>
         ) : (
           <>teacher</>
         )}
