@@ -62,8 +62,8 @@ export const fetchPaperSeterQue = asyncHandler(async (req, res) => {
       queSeterId: userId,
     },
     orderBy: {
-        id: 'asc', // or 'desc' for descending order
-      },
+      id: "asc", // or 'desc' for descending order
+    },
   });
 
   if (!questions) {
@@ -130,4 +130,23 @@ export const updateQuestion = asyncHandler(async (req, res) => {
     .send(
       new ApiResponse(200, product, "fetchPaperSeterQue fetch Successfully")
     );
+});
+
+export const deleteQue = asyncHandler(async (req, res) => {
+  const queId = req.body.id;
+  if (!queId) {
+    throw new ApiError(
+      400,
+      "not able to fetch queId from req.body in deleteQue"
+    );
+  }
+  const deletedQue = await prisma.que.delete({
+    where: {
+      id: queId,
+    },
+  });
+
+  res
+    .status(200)
+    .send(new ApiResponse(200, deletedQue, "deleteQue Successfully"));
 });

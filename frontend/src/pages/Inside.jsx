@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRecoilValue } from "recoil";
 import { RoleAtom, UserNameAtom } from "../store/userAtom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AddQuestion from "../components/AddQuestion";
-import QueListPaperSeter from "../components/QueListPaperSeter";
+
+import PaperSeter from "../components/PaperSeter.jsx";
+import Teacher from "../components/Teacher";
 
 const Inside = () => {
   const role = useRecoilValue(RoleAtom);
   const userName = useRecoilValue(UserNameAtom);
   const navigate = useNavigate();
-  const [addQuestion, setAddQuestion] = useState(true);
 
   const logOut = async () => {
     try {
@@ -38,35 +38,7 @@ const Inside = () => {
           LogOut
         </button>
       </div>
-      <div>
-        {role === "paperSeter" ? (
-          <div className="bg-gray-100 ">
-            <div className="h-[70px] bg-gray-100 flex items-center justify-center">
-              <button
-                onClick={() => setAddQuestion(true)}
-                className="bg-white  text-xl font-semibold  w-[250px] py-2 shadow-lg"
-              >
-                Add Question
-              </button>
-              <button
-                onClick={() => setAddQuestion(false)}
-                className="ml-10 bg-white text-xl font-semibold  w-[250px] py-2 shadow-lg"
-              >
-                Your Listing
-              </button>
-            </div>
-            <div className="">
-              {addQuestion ? (
-                <AddQuestion setAddQuestion={setAddQuestion} />
-              ) : (
-                <QueListPaperSeter setAddQuestion={setAddQuestion} />
-              )}
-            </div>
-          </div>
-        ) : (
-          <>teacher</>
-        )}
-      </div>
+      <div>{role === "paperSeter" ? <PaperSeter /> : <Teacher />}</div>
     </>
   );
 };

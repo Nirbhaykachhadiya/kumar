@@ -1,10 +1,13 @@
-import React from "react";
+import React,{useState} from "react";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
-import { SignUpAtom } from "../store/userAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { LoadingAtom, SignUpAtom } from "../store/userAtom";
 import axios from "axios";
 
+import Loading from "../assets/Loading";
+
 const SignUp = () => {
+  const [loading,setLoading]=useState(false)
   const {
     register,
     handleSubmit,
@@ -26,6 +29,7 @@ const SignUp = () => {
           role,
         }
       );
+      setLoading(false)
       console.log("signUp successful", res);
     } catch (error) {
       console.log("error accur in signUp", error.message);
@@ -33,6 +37,7 @@ const SignUp = () => {
   };
 
   const onSubmit = (data) => {
+    setLoading(true)
     signUpBackend(data.userName, data.password, data.role);
     reset();
   };

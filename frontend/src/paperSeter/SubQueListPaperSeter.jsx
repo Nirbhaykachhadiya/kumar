@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import Loading from "../assets/Loading";
 import axios from "axios";
 
-const SubQueListPaperSeter = ({ index, item, setReCheck ,num}) => {
+const SubQueListPaperSeter = ({ index, item, setReCheck, num }) => {
   const [edit, setEdit] = useState(false);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -48,6 +48,21 @@ const SubQueListPaperSeter = ({ index, item, setReCheck ,num}) => {
     update(data);
   };
 
+  const deleteQue = async (id) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/api/v1/users/deleteque",
+        { id },
+        { withCredentials: true }
+      );
+
+      setReCheck((prev) => !prev);
+      console.log("deleteQue Successfully", res);
+    } catch (error) {
+      console.log("deleteQue Unsuccessfull", error.message);
+    }
+  };
+
   return (
     <div className="flex sm:justify-center sm:w-[1300px] border my-5 py-2 px-5 bg-white shadow-lg mx-5">
       {!edit ? (
@@ -59,7 +74,7 @@ const SubQueListPaperSeter = ({ index, item, setReCheck ,num}) => {
           <div className="ml-5">
             <div className="flex w-[500px]  sm:w-[700px] justify-between font-semibold text-xl">
               <div>{item.question}</div>
-              <div className="bg-blue-500 px-3 py-1 rounded-md text-white">
+              <div className="bg-blue-500 px-3 h-[40px] py-1 rounded-md text-white">
                 {item.chepter}
               </div>
             </div>
@@ -75,7 +90,10 @@ const SubQueListPaperSeter = ({ index, item, setReCheck ,num}) => {
               </div>
               <div className="flex w-3/12 justify-end ml-5">
                 <div>
-                  <button className="bg-red-500  rounded-md text-white font-semibold px-3 py-1">
+                  <button
+                    onClick={() => deleteQue(item.id)}
+                    className="bg-red-500  rounded-md text-white font-semibold px-3 py-1"
+                  >
                     Delete
                   </button>
                 </div>

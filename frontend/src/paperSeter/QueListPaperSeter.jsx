@@ -20,8 +20,8 @@ const QueListPaperSeter = () => {
       );
       setQues(res.data.data);
 
-      setNum(1);
       setLoading(false);
+      setNum(1);
 
       console.log(
         "fetchPaperSeterQue from backend successfully",
@@ -56,7 +56,7 @@ const QueListPaperSeter = () => {
     if (num != 0) {
       stage();
     }
-  }, [num]);
+  }, [num, reCheck, ques]);
 
   return (
     <div>
