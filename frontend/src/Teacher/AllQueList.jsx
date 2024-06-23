@@ -2,12 +2,12 @@ import React from "react";
 import SubAllQueList from "./SubAllQueList";
 
 const AllQueList = ({ ques, chepArr }) => {
-  return chepArr.map((item) => {
+  return chepArr.map((item,index) => {
     const filterItem = ques.filter((que) => que.chepter === item);
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center " key={index}>
         <div className=" bg-white my-5 text-black flex justify-end items-center h-[109px]">
-          <div className="bg-green-500 h-[30px] pl-3 text-white font-semibold shadow-lg pr-1 rounded-l-md">
+          <div className="bg-blue-500 h-[30px] pl-3 text-white font-semibold shadow-lg pr-1 rounded-l-md">
             {item}
           </div>
         </div>

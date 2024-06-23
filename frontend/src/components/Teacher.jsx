@@ -38,7 +38,6 @@ const Teacher = () => {
       });
 
       setChepArr(newArr);
-      console.log(chepArr);
     }
   }, [ques]);
   return (
