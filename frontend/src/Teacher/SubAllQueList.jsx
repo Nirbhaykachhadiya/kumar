@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import SubSubAllQueList from "./SubSubAllQueList";
 
-const SubAllQueList = ({ filterItem }) => {
+const SubAllQueList = ({ filterItem,setAddToCartCheck }) => {
   const [down, setDown] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -16,6 +16,7 @@ const SubAllQueList = ({ filterItem }) => {
         { withCredentials: true }
       );
       setDone(true);
+      setAddToCartCheck((prev)=>!prev)
       console.log("que addTocart successfully", res);
     } catch (error) {
       console.log("que addTocart Unsuccessful", error.message);
@@ -33,7 +34,7 @@ const SubAllQueList = ({ filterItem }) => {
           {" "}
           <div className="font-semibold ml-2 text-xl">(1)</div>
           <div className="ml-2 sm:ml-5">
-            <div className="flex w-[450px]  sm:w-[1000px] justify-between font-semibold text-l sm:text-xl">
+            <div className="flex w-[450px]  sm:w-[1000px] justify-between font-semibold  sm:text-xl">
               <div>{filterItem[0].question}</div>
               <div className=" flex justify-end">
                 <div>
@@ -66,9 +67,9 @@ const SubAllQueList = ({ filterItem }) => {
         {down
           ? finalFilterItem.map((item, index) => {
               return (
-                <>
-                  <SubSubAllQueList item={item} index={index} />
-                </>
+                <div key={index}>
+                  <SubSubAllQueList item={item} index={index} setAddToCartCheck={setAddToCartCheck} />
+                </div>
               );
             })
           : ""}

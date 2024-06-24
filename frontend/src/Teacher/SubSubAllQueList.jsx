@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const SubSubAllQueList = ({ item, index }) => {
+const SubSubAllQueList = ({ item, index, setAddToCartCheck }) => {
+  const [done2, setDone2] = useState(false);
 
-    const [done2, setDone2] = useState(false);
-
-    const addToCart2 = async (id) => {
-        try {
-          const res = await axios.post(
-            "http://localhost:3001/api/v1/users/addToCart",
-            { id },
-            { withCredentials: true }
-          );
-          setDone2(true);
-          console.log("que addTocart successfully", res);
-        } catch (error) {
-          console.log("que addTocart Unsuccessful", error.message);
-        }
-      };
+  const addToCart2 = async (id) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/api/v1/users/addToCart",
+        { id },
+        { withCredentials: true }
+      );
+      setDone2(true);
+      setAddToCartCheck((prev) => !prev);
+      console.log("que addTocart successfully", res);
+    } catch (error) {
+      console.log("que addTocart Unsuccessful", error.message);
+    }
+  };
   return (
     <div
       key={index}
@@ -29,14 +29,17 @@ const SubSubAllQueList = ({ item, index }) => {
         <div className="flex w-[450px]  sm:w-[1000px] justify-between font-semibold text-l sm:text-xl">
           <div>{item.question}</div>
           <div className=" flex justify-end">
-            <div>{!done2 ?
-              <button
-                onClick={() => addToCart2(item.id)}
-                className="bg-red-500 px-3  py-1 rounded-md font-semibold shadow-lg text-white"
-              >
-                Add +
-              </button>:
-              <div className="text-red-500">Added✅</div>}
+            <div>
+              {!done2 ? (
+                <button
+                  onClick={() => addToCart2(item.id)}
+                  className="bg-red-500 px-3  py-1 rounded-md font-semibold shadow-lg text-white"
+                >
+                  Add +
+                </button>
+              ) : (
+                <div className="text-red-500">Added✅</div>
+              )}
             </div>
           </div>
         </div>

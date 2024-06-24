@@ -2,7 +2,7 @@ import { Router } from "express";
 import { login, logout, signUp } from "../services/userService.js";
 import { userMiddleware } from "../middlewares/userMiddleware.js";
 import { deleteQue, fetchPaperSeterQue, questionListing, updateQuestion } from "../services/paperSeterService.js";
-import { addToCart, fetchAllQue } from "../services/teacherService.js";
+import { addToCart, addToCartItems, deleteAddToCartQue, fetchAllQue } from "../services/teacherService.js";
 
 const userRouter = Router();
 
@@ -15,7 +15,9 @@ userRouter.route("/updatequestion").post(updateQuestion)
 userRouter.route("/deleteque").post(deleteQue)
 userRouter.route("/fetchAllQue").post(fetchAllQue)
 userRouter.route("/addToCart").post(userMiddleware,addToCart)
+userRouter.route("/addToCartItems").post(userMiddleware,addToCartItems)
+userRouter.route("/deleteAddToCartQue").post(userMiddleware,deleteAddToCartQue)
 
-addToCart
+
 
 export default userRouter;

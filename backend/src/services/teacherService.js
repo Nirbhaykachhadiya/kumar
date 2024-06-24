@@ -35,3 +35,35 @@ export const addToCart = asyncHandler(async (req, res) => {
   });
   res.status(200).send(new ApiResponse(200, order, "addToCart Successfully"));
 });
+
+export const addToCartItems = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+
+  const ques = await prisma.tempOrder.findMany({
+    where: {
+      buyerId: userId,
+    },
+
+    include: {
+      question: true,
+    },
+  });
+
+  res
+    .status(200)
+    .send(new ApiResponse(200, ques, "addToCartQues fetch Successfully"));
+});
+
+export const deleteAddToCartQue = asyncHandler(async (req, res) => {
+  const id = req.body.id;
+
+  const deleted = await prisma.tempOrder.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  res
+    .status(200)
+    .send(new ApiResponse(200, deleted, "deleteAddToCartQue  Successfully"));
+});
