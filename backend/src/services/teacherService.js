@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { PrismaClient } from "@prisma/client";
+import puppeteer from "puppeteer";
 
 const prisma = new PrismaClient();
 
@@ -67,3 +68,4 @@ export const deleteAddToCartQue = asyncHandler(async (req, res) => {
     .status(200)
     .send(new ApiResponse(200, deleted, "deleteAddToCartQue  Successfully"));
 });
+

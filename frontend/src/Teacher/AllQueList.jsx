@@ -29,28 +29,48 @@ const AllQueList = ({ ques, chepArr }) => {
     addToCartItems();
   }, [addToCartCheck]);
 
-  const generatePdf = () => {
+  const generatePdf = async () => {
     const input = document.getElementById("pdf-content");
-    html2canvas(input, { scale: 2 }).then((canvas) => {
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 295; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
 
-      const pdf = new jsPDF("p", "mm", "a4");
-      let position = 0;
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageHeight = 295; // A4 height in mm
+    const pageWidth = 210; // A4 width in mm
+    let position = 0; // Top position for the new content
+    let heightLeft = pageHeight;
 
-      pdf.addImage(canvas, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+    const coching = document.getElementById("coching-name");
+    const cochingHeight = coching.offsetHeight * 0.264583;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
+    const canvas = await html2canvas(coching, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+    pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
+    position += cochingHeight;
+    heightLeft -= cochingHeight;
+
+    const questions = Array.from(input.querySelectorAll(".pdf-question"));
+
+    for (let i = 0; i < questions.length; i++) {
+      const question = questions[i];
+      const questionHeight = question.offsetHeight * 0.264583; // Convert px to mm
+
+      if (heightLeft - questionHeight < 0) {
         pdf.addPage();
-        pdf.addImage(canvas, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        heightLeft = pageHeight;
+        position = 0;
       }
-      pdf.save("mcqs.pdf");
-    });
+
+      const canvas = await html2canvas(question, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+      const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+      pdf.addImage(imgData, "PNG", 0, position, pageWidth, imgHeight);
+      position += questionHeight;
+      heightLeft -= questionHeight;
+    }
+
+    pdf.save("mcqs.pdf");
   };
 
   return (
@@ -110,7 +130,7 @@ const AllQueList = ({ ques, chepArr }) => {
                     onClick={generatePdf}
                     className="bg-red-500 my-3 px-3  py-2 rounded-md font-semibold shadow-lg text-white"
                   >
-                    Save & Download PDF
+                    Save & Download PDF 📥
                   </button>
                 </div>
               </div>
@@ -119,18 +139,20 @@ const AllQueList = ({ ques, chepArr }) => {
         </>
       )}
       <div id="pdf-content">
-        <div className="flex justify-center">
-          <div className="my-5 text-xl font-semibold">
-            Unnati Education Academy
-           
+        <div className="flex justify-center" id="coching-name">
+          <div>
+            <div className="mt-5 text-2xl font-semibold">
+              Unnati Education Academy
+            </div>
+            <hr className="my-5" />
           </div>
         </div>
-        <hr className="my-5"/>
+
         <div className="flex justify-center">
           <div>
             {addToCartQues.map((item, index) => {
               return (
-                <div key={index}>
+                <div key={index} className="pdf-question">
                   <PdfQueList item={item} index={index} />
                 </div>
               );
