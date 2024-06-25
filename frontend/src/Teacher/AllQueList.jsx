@@ -61,42 +61,63 @@ const AllQueList = ({ ques, chepArr }) => {
                 {" "}
                 <button onClick={() => setUp(!up)}>{!up ? "▲" : "▼"}</button>
               </div>
-              <div>Total Que Added : {addToCartQues.length}</div>
+              <div>
+                <div>Total Que Added : {addToCartQues.length}</div>
+              </div>
             </div>
           ) : (
             <>
-              {up && !samplePdf ? (
-                <div className="bg-black  px-10 sticky bottom-0 text-white  z-10">
+              {up && addToCartQues.length === 0 ? (
+                <div className="bg-black flex items-center justify-between px-10 sticky bottom-0 text-white h-[50px] z-10">
+                  <div>
+                    {" "}
+                    <button onClick={() => setUp(!up)}>
+                      {!up ? "▲" : "▼"}
+                    </button>
+                  </div>
+                  <div>
+                    <div>You Haven't Added anything</div>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+              {up && addToCartQues.length > 0 && !samplePdf ? (
+                <div className="bg-black   px-10 sticky bottom-0 text-white  z-10">
                   <div>
                     <button onClick={() => setUp(!up)}>
                       {!up ? "▲" : "▼"}
                     </button>
                   </div>
-                  <div className="flex justify-center">
-                    <div>
+                  {addToCartQues.length != 0 ? (
+                    <div className="flex justify-center">
                       <div>
-                        {addToCartQues.map((item, index) => {
-                          return (
-                            <div key={index}>
-                              <SubAddToCartQues
-                                item={item}
-                                index={index}
-                                setAddToCartCheck={setAddToCartCheck}
-                              />
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="flex justify-center">
-                        <button
-                          onClick={() => setSamplePdf(true)}
-                          className="bg-red-500 my-3 px-3  py-2 rounded-md font-semibold shadow-lg text-white"
-                        >
-                          Save & Continue ➤
-                        </button>
+                        <div>
+                          {addToCartQues.map((item, index) => {
+                            return (
+                              <div key={index}>
+                                <SubAddToCartQues
+                                  item={item}
+                                  index={index}
+                                  setAddToCartCheck={setAddToCartCheck}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => setSamplePdf(true)}
+                            className="bg-red-500 my-3 px-3  py-2 rounded-md font-semibold shadow-lg text-white"
+                          >
+                            Save & Continue ➤
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               ) : (
                 <></>

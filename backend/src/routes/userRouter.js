@@ -12,6 +12,8 @@ import {
   addToCartItems,
   deleteAddToCartQue,
   fetchAllQue,
+  fetchPaper,
+  savePaperToBackend,
 
 } from "../services/teacherService.js";
 
@@ -33,5 +35,13 @@ userRouter
   .route("/deleteAddToCartQue")
   .post(userMiddleware, deleteAddToCartQue);
 //userRouter.route("/generatePdfBack").post(userMiddleware, generatePdfBack);
+userRouter
+  .route("/savePaperToBackend")
+  .post(userMiddleware, savePaperToBackend);
+  userRouter
+  .route("/fetchPaper")
+  .post(userMiddleware, fetchPaper);
+
+  
 
 export default userRouter;

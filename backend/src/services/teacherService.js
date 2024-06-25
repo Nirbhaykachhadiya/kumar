@@ -69,3 +69,100 @@ export const deleteAddToCartQue = asyncHandler(async (req, res) => {
     .send(new ApiResponse(200, deleted, "deleteAddToCartQue  Successfully"));
 });
 
+export const savePaperToBackend = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+  if (!userId) {
+    throw new ApiError(
+      400,
+      "error accur fetch userId from req.userId from Middleware in savePaperToBackend function"
+    );
+  }
+
+  const paper = await prisma.paper.create({
+    data: {
+      createrId: userId,
+    },
+  });
+
+  const quesIds = await prisma.tempOrder.findMany({
+    where: {
+      buyerId: userId,
+    },
+    select: {
+      queId: true,
+    },
+  });
+
+  for (let i = 0; i < quesIds.length; i++) {
+    await prisma.paperQue.create({
+      data: {
+        paperId: paper.id,
+        queId: quesIds[i].queId,
+      },
+    });
+  }
+
+  await prisma.tempOrder.deleteMany({
+    where: {
+      buyerId: userId,
+    },
+  });
+
+  res
+    .status(200)
+    .send(new ApiResponse(200, paper, "savePaperToBackend  Successfully"));
+});
+
+export const fetchPaper = asyncHandler(async (req, res) => {
+  const userId = req.userId;
+  const papers = await prisma.paper.findMany({
+    where: {
+      createrId: userId,
+    },
+    include: {
+      paperQuestions: true,
+    },
+  });
+  console.log(papers);
+  let quests = [];
+  for (const element of papers) {
+    for (const que of element.paperQuestions) {
+      const queOne = await prisma.que.findFirst({
+        where: {
+          id: que.queId,
+        },
+      });
+      let question = new Object();
+      question.question = queOne;
+      quests.push(question);
+    }
+    element.question = quests;
+    quests = [];
+  }
+
+  // const resp = [];
+  // for (const element of papers) {
+  //   const ques = await prisma.paperQue.findMany({
+  //     where: {
+  //       paperId: element.id,
+  //     },
+  //     include: {
+  //       que: true,
+  //     },
+  //   });
+  //   const temp = new Object();
+  //   temp.id = element.id;
+  //   temp.createdAt = element.createdAt;
+  //   temp.ques = ques;
+  //   resp.push(temp);
+  // }
+  res
+    .status(200)
+    .send(
+      new ApiResponse(
+        200,
+        papers,
+        "fetchPaperFrombacksendtofront  Successfully"
+      )
+    );
+});

@@ -1,10 +1,32 @@
 import RedLoading from "../assets/RedLoading";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
+import axios from "axios";
 
-const PdfQueList = ({ addToCartQues }) => {
+const PdfQueList = ({ addToCartQues, downloaded = false }) => {
   const [loading, setLoading] = useState("false");
+  const [paperBackend, setPaperBackend] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await axios.post(
+          "http://localhost:3001/api/v1/users/savePaperToBackend",
+          {},
+          { withCredentials: true }
+        );
+        //setQues(res.data.data);
+        //setLoading(false);
+        console.log("savePaperToBackend succesfully", res);
+      } catch (error) {
+        console.log("savePaperToBackendUnsuccesful", error.message);
+      }
+    };
+    if (paperBackend) {
+      fetch();
+    }
+  }, [paperBackend]);
 
   const generatePdf = async () => {
     setLoading("true");
@@ -31,7 +53,7 @@ const PdfQueList = ({ addToCartQues }) => {
 
     for (let i = 0; i < questions.length; i++) {
       const question = questions[i];
-      const questionHeight = question.offsetHeight*0.35 // Convert px to mm
+      const questionHeight = question.offsetHeight * 0.37; // Convert px to mm
 
       if (heightLeft - questionHeight < 0) {
         pdf.addPage();
@@ -50,151 +72,157 @@ const PdfQueList = ({ addToCartQues }) => {
 
     pdf.save("mcqs.pdf");
     setLoading("finish");
+    if (!downloaded) {
+      setPaperBackend(true);
+    }
+    downloaded === true;
   };
 
   return (
-    <div id="pdf-content" style={{ border: "1px solid black" }}>
-      <div
-        id="coching-name"
-        style={{ display: "flex", justifyContent: "center" }}
-      >
-        <div>
+    <>
+      <div>
+        <div className="text-center font-semibold pb-5 text-red-500">
+          Your Paper is ready.....▼
+        </div>
+        <div id="pdf-content">
           <div
-            style={{
-              padding: "16px",
-              fontSize: "30px",
-              textAlign: "center",
-              fontWeight: "bold",
-            }}
+            id="coching-name"
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            Unnati Education Academy
-          </div>
-          <div>
-            <hr
+            <div>
+              <div
+                style={{
+                  padding: "16px",
+                  fontSize: "30px",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Unnati Education Academy
+              </div>
+              <div>
+                {/* <hr
               style={{
                 marginTop: "20px",
                 width: "100vw",
                 border: "1px solid black",
               }}
-            />
+            /> */}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div>
-          {addToCartQues.map((item, index) => {
-            return (
-              <div key={index} className="pdf-question">
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "12px",
-                    width: "650px",
-                    paddingInline: "20px",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <div>
-                    <div style={{ display: "flex" }}>
-                      <div
-                        style={{
-                          fontWeight: "bold",
-                          color: "black",
-                          fontSize: "22px",
-                        }}
-                      >
-                        ({index + 1})
-                      </div>
-                      <div style={{ marginLeft: "12px" }}>
-                        <div
-                          style={{
-                            width: "550px",
-                            color: "black",
-                            fontWeight: "normal",
-                            fontSize: "24px",
-                          }}
-                        >
-                          {item.question.question}
-                        </div>
-                      </div>
-                    </div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <div>
+              {addToCartQues.map((item, index) => {
+                return (
+                  <div key={index} className="pdf-question">
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        color: "black",
-                        fontSize: "18px",
-                        margin: "8px 0",
-                        marginLeft: "28px",
-                        fontWeight: "lighter",
-                        width: "550px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "12px",
+                        width: "650px",
+                        paddingInline: "20px",
+                        backgroundColor: "white",
                       }}
                     >
-                      <div>(A) {item.question.option1}</div>
-                      <div>(B) {item.question.option2}</div>
-                      <div>(C) {item.question.option3}</div>
-                      <div>(D) {item.question.option4}</div>
+                      <div>
+                        <div style={{ display: "flex" }}>
+                          <div
+                            className="text-medium"
+                            style={{
+                              fontWeight: "bold",
+                              color: "black",
+                            }}
+                          >
+                            ({index + 1})
+                          </div>
+                          <div style={{ marginLeft: "12px" }}>
+                            <div
+                              style={{
+                                width: "550px",
+                                color: "black",
+                                fontWeight: "normal",
+                                fontSize: "24px",
+                              }}
+                            >
+                              {item.question.question}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            color: "black",
+                            fontSize: "18px",
+                            margin: "8px 0",
+                            marginLeft: "28px",
+                            fontWeight: "lighter",
+                            width: "550px",
+                          }}
+                        >
+                          <div>(A) {item.question.option1}</div>
+                          <div>(B) {item.question.option2}</div>
+                          <div>(C) {item.question.option3}</div>
+                          <div>(D) {item.question.option4}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                );
+              })}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {loading === "false" && !downloaded ? (
+              <button
+                onClick={generatePdf}
+                style={{
+                  backgroundColor: "#f56565",
+                  margin: "12px",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  fontWeight: "bold",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  color: "white",
+                }}
+              >
+                Save & Download PDF 📥
+              </button>
+            ) : (
+              ""
+            )}
+            {loading === "finish" || downloaded ? (
+              <button
+                onClick={generatePdf}
+                style={{
+                  backgroundColor: "#f56565",
+                  margin: "12px",
+                  padding: "8px 12px",
+                  borderRadius: "6px",
+                  fontWeight: "bold",
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                  color: "white",
+                }}
+              >
+                Download PDF Again 📥
+              </button>
+            ) : (
+              ""
+            )}
+            {loading === "true" ? <RedLoading /> : ""}
+          </div>
         </div>
       </div>
-
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {loading === "false" ? (
-          <button
-            onClick={generatePdf}
-            style={{
-              backgroundColor: "#f56565",
-              margin: "12px",
-              padding: "8px 12px",
-              borderRadius: "6px",
-              fontWeight: "bold",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              color: "white",
-            }}
-          >
-            Save & Download PDF 📥
-          </button>
-        ) : (
-          ""
-        )}
-        {loading === "finish" ? (
-          <button
-            onClick={generatePdf}
-            style={{
-              backgroundColor: "#f56565",
-              margin: "12px",
-              padding: "8px 12px",
-              borderRadius: "6px",
-              fontWeight: "bold",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-              color: "white",
-            }}
-          >
-            Download PDF Again 📥
-          </button>
-        ) : (
-          ""
-        )}
-        {loading === "true" ? <RedLoading /> : ""}
-      </div>
-    </div>
+    </>
   );
 };
 
 export default PdfQueList;
-
-
-
-
-
 
 // const PdfQueList = ({ addToCartQues }) => {
 //   const [loading, setLoading] = useState("false");

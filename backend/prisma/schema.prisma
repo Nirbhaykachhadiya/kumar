@@ -34,10 +34,10 @@ model Que {
   option4 String
   answer String
   queSeterId Int
-  paperId     Int?
+  paperId    PaperQue[] @relation("que-paper")
   order TempOrder[] @relation("order")
   queSeter User @relation("listed",fields: [queSeterId],references: [id])
-  paper Paper ?@relation("que", fields: [paperId], references: [id])
+ // paper Paper ?@relation("que", fields: [paperId], references: [id])
   }
 
 
@@ -51,9 +51,19 @@ model Que {
 
   }
 
+model PaperQue {
+  id Int @id @default(autoincrement())
+  paperId Int
+  queId Int
+  paper Paper @relation("paper-que",fields: [paperId],references: [id])
+  que Que @relation("que-paper",fields: [queId],references: [id])
+
+}
   model Paper{
     id Int @id @default(autoincrement())
     createrId Int
-    Questions Que[] @relation("que")
+    paperQuestions PaperQue[] @relation("paper-que")
     creater User @relation("paper",fields: [createrId],references: [id])
+    createdAt     DateTime    @default(now())
+  
   }
