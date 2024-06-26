@@ -140,22 +140,7 @@ export const fetchPaper = asyncHandler(async (req, res) => {
     quests = [];
   }
 
-  // const resp = [];
-  // for (const element of papers) {
-  //   const ques = await prisma.paperQue.findMany({
-  //     where: {
-  //       paperId: element.id,
-  //     },
-  //     include: {
-  //       que: true,
-  //     },
-  //   });
-  //   const temp = new Object();
-  //   temp.id = element.id;
-  //   temp.createdAt = element.createdAt;
-  //   temp.ques = ques;
-  //   resp.push(temp);
-  // }
+
   res
     .status(200)
     .send(
